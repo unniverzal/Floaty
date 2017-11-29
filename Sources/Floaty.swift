@@ -17,31 +17,31 @@ public enum FloatyOpenAnimationType {
 }
 
 /**
-    Floaty Object. It has `FloatyItem` objects.
-    Floaty support storyboard designable.
-*/
+ Floaty Object. It has `FloatyItem` objects.
+ Floaty support storyboard designable.
+ */
 @IBDesignable
 open class Floaty: UIView {
     // MARK: - Properties
-
+    
     /**
-        `FloatyItem` objects.
-    */
+     `FloatyItem` objects.
+     */
     open var items: [FloatyItem] = []
-
+    
     /**
-        This object's button size.
-    */
+     This object's button size.
+     */
     open var size: CGFloat = 56 {
         didSet {
             self.setNeedsDisplay()
             self.recalculateItemsOrigin()
         }
     }
-
+    
     /**
-        Padding from bottom right of UIScreen or superview.
-    */
+     Padding from bottom right of UIScreen or superview.
+     */
     open var paddingX: CGFloat = 14 {
         didSet {
             self.setNeedsDisplay()
@@ -52,53 +52,53 @@ open class Floaty: UIView {
             self.setNeedsDisplay()
         }
     }
-
-	/**
-		Automatically closes child items when tapped
-	*/
-	@IBInspectable open var autoCloseOnTap: Bool = true
-
-	/**
-		Degrees to rotate image
-	*/
-	@IBInspectable open var rotationDegrees: CGFloat = -45
-
+    
+    /**
+     Automatically closes child items when tapped
+     */
+    @IBInspectable open var autoCloseOnTap: Bool = true
+    
+    /**
+     Degrees to rotate image
+     */
+    @IBInspectable open var rotationDegrees: CGFloat = -45
+    
     /**
      Animation speed of buttons
      */
     @IBInspectable open var animationSpeed: Double = 0.1
     /**
-        Button color.
-    */
+     Button color.
+     */
     @IBInspectable open var buttonColor: UIColor = UIColor(red: 73/255.0, green: 151/255.0, blue: 241/255.0, alpha: 1)
-
+    
     /**
-        Button image.
-    */
+     Button image.
+     */
     @IBInspectable open var buttonImage: UIImage? = nil {
         didSet {
             self.setNeedsDisplay()
         }
     }
-
+    
     /**
-        Plus icon color inside button.
-    */
+     Plus icon color inside button.
+     */
     @IBInspectable open var plusColor: UIColor = UIColor(white: 0.2, alpha: 1)
-
+    
     /**
-        Background overlaying color.
-    */
+     Background overlaying color.
+     */
     @IBInspectable open var overlayColor: UIColor = UIColor.black.withAlphaComponent(0.3)
-
+    
     /**
-        The space between the item and item.
-    */
+     The space between the item and item.
+     */
     @IBInspectable open var itemSpace: CGFloat = 14
-
+    
     /**
-        Child item's default size.
-    */
+     Child item's default size.
+     */
     @IBInspectable open var itemSize: CGFloat = 42 {
         didSet {
             self.items.forEach { item in
@@ -108,44 +108,44 @@ open class Floaty: UIView {
             self.setNeedsDisplay()
         }
     }
-
+    
     /**
-        Child item's default button color.
-    */
+     Child item's default button color.
+     */
     @IBInspectable open var itemButtonColor: UIColor = UIColor.white
-
+    
     /**
      Child item's default title label color.
      */
     @IBInspectable open var itemTitleColor: UIColor = UIColor.white
-
-	/**
-		Child item's image color
-	*/
-	@IBInspectable open var itemImageColor: UIColor? = nil
-
+    
     /**
-        Enable/disable shadow.
+     Child item's image color
+     */
+    @IBInspectable open var itemImageColor: UIColor? = nil
+    
+    /**
+     Enable/disable shadow.
      */
     @IBInspectable open var hasShadow: Bool = true
-
+    
     /**
-        Child item's default shadow color.
-    */
+     Child item's default shadow color.
+     */
     @IBInspectable open var itemShadowColor: UIColor = UIColor.black
-
+    
     /**
-
-    */
+     
+     */
     open var closed: Bool = true
-
+    
     /**
      Whether or not floaty responds to keyboard notifications and adjusts its position accordingly
      */
     @IBInspectable open var respondsToKeyboard: Bool = true
     
     open var openAnimationType: FloatyOpenAnimationType = .pop
-
+    
     open var friendlyTap: Bool = true
     
     open var sticky: Bool = false
@@ -158,70 +158,70 @@ open class Floaty: UIView {
     
     /**
      Delegate that can be used to learn more about the behavior of the FAB widget.
-    */
+     */
     @IBOutlet open weak var fabDelegate: FloatyDelegate?
-
+    
     /**
-        Button shape layer.
-    */
+     Button shape layer.
+     */
     fileprivate var circleLayer: CAShapeLayer = CAShapeLayer()
-
+    
     /**
-        Plus icon shape layer.
-    */
+     Plus icon shape layer.
+     */
     fileprivate var plusLayer: CAShapeLayer = CAShapeLayer()
-
+    
     /**
-        Button image view.
-    */
+     Button image view.
+     */
     fileprivate var buttonImageView: UIImageView = UIImageView()
-
+    
     /**
-        If you keeping touch inside button, button overlaid with tint layer.
-    */
+     If you keeping touch inside button, button overlaid with tint layer.
+     */
     fileprivate var tintLayer: CAShapeLayer = CAShapeLayer()
-
+    
     /**
-        If you show items, background overlaid with overlayColor.
-    */
-//    private var overlayLayer: CAShapeLayer = CAShapeLayer()
-
+     If you show items, background overlaid with overlayColor.
+     */
+    //    private var overlayLayer: CAShapeLayer = CAShapeLayer()
+    
     fileprivate var overlayView : UIControl = UIControl()
-
+    
     /**
-        Keep track of whether overlay open animation completes, to avoid animation conflicts.
+     Keep track of whether overlay open animation completes, to avoid animation conflicts.
      */
     fileprivate var overlayViewDidCompleteOpenAnimation: Bool = true
-
+    
     /**
-        If you created this object from storyboard or `initWithFrame`, this property set true.
-    */
+     If you created this object from storyboard or `initWithFrame`, this property set true.
+     */
     fileprivate var isCustomFrame: Bool = false
-
+    
     // MARK: - Initialize
-
+    
     /**
-        Initialize with default property.
-    */
+     Initialize with default property.
+     */
     public init() {
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
         backgroundColor = UIColor.clear
         setObserver()
     }
-
+    
     /**
-        Initialize with custom size.
-    */
+     Initialize with custom size.
+     */
     public init(size: CGFloat) {
         self.size = size
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
         backgroundColor = UIColor.clear
         setObserver()
     }
-
+    
     /**
-        Initialize with custom frame.
-    */
+     Initialize with custom frame.
+     */
     public override init(frame: CGRect) {
         super.init(frame: frame)
         size = min(frame.size.width, frame.size.height)
@@ -229,10 +229,10 @@ open class Floaty: UIView {
         isCustomFrame = true
         setObserver()
     }
-
+    
     /**
-        Initialize from storyboard.
-    */
+     Initialize from storyboard.
+     */
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         size = min(frame.size.width, frame.size.height)
@@ -241,15 +241,15 @@ open class Floaty: UIView {
         isCustomFrame = true
         setObserver()
     }
-
+    
     // MARK: - Method
-
+    
     /**
-        Set size and frame.
-    */
+     Set size and frame.
+     */
     open override func draw(_ rect: CGRect) {
         super.draw(rect)
-
+        
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
         if isCustomFrame == false {
@@ -257,7 +257,7 @@ open class Floaty: UIView {
         } else {
             size = min(frame.size.width, frame.size.height)
         }
-
+        
         setCircleLayer()
         if buttonImage == nil {
             setPlusLayer()
@@ -266,35 +266,35 @@ open class Floaty: UIView {
         }
         setShadow()
     }
-
+    
     /**
-        Items open.
-    */
+     Items open.
+     */
     open func open() {
         fabDelegate?.floatyWillOpen?(self)
         let animationGroup = DispatchGroup()
         
         if(items.count > 0){
-
+            
             setOverlayView()
             self.superview?.insertSubview(overlayView, aboveSubview: self)
             self.superview?.bringSubview(toFront: self)
             overlayView.addTarget(self, action: #selector(close), for: UIControlEvents.touchUpInside)
-
+            
             overlayViewDidCompleteOpenAnimation = false
             animationGroup.enter()
             UIView.animate(withDuration: 0.3, delay: 0,
-                usingSpringWithDamping: 0.55,
-                initialSpringVelocity: 0.3,
-                options: UIViewAnimationOptions(), animations: { () -> Void in
-                    self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(self.rotationDegrees), 0.0, 0.0, 1.0)
-                    self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(self.rotationDegrees))
-                    self.overlayView.alpha = 1
-                }, completion: {(f) -> Void in
-                    self.overlayViewDidCompleteOpenAnimation = true
-                    animationGroup.leave()
+                           usingSpringWithDamping: 0.55,
+                           initialSpringVelocity: 0.3,
+                           options: UIViewAnimationOptions(), animations: { () -> Void in
+                            self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(self.rotationDegrees), 0.0, 0.0, 1.0)
+                            self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(self.rotationDegrees))
+                            self.overlayView.alpha = 1
+            }, completion: {(f) -> Void in
+                self.overlayViewDidCompleteOpenAnimation = true
+                animationGroup.leave()
             })
-
+            
             switch openAnimationType {
             case .pop:
                 popAnimationWithOpen(group: animationGroup)
@@ -310,17 +310,17 @@ open class Floaty: UIView {
                 noneAnimationWithOpen()
             }
         }
-
+        
         animationGroup.notify(queue: .main) {
             self.fabDelegate?.floatyDidOpen?(self)
         }
         fabDelegate?.floatyOpened?(self)
         closed = false
     }
-
+    
     /**
-        Items close.
-    */
+     Items close.
+     */
     @objc open func close() {
         fabDelegate?.floatyWillClose?(self)
         let animationGroup = DispatchGroup()
@@ -329,20 +329,20 @@ open class Floaty: UIView {
             self.overlayView.removeTarget(self, action: #selector(close), for: UIControlEvents.touchUpInside)
             animationGroup.enter()
             UIView.animate(withDuration: 0.3, delay: 0,
-                usingSpringWithDamping: 0.6,
-                initialSpringVelocity: 0.8,
-                options: [], animations: { () -> Void in
-                    self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(0), 0.0, 0.0, 1.0)
-                    self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(0))
-                    self.overlayView.alpha = 0
-                }, completion: {(f) -> Void in
-                    if self.overlayViewDidCompleteOpenAnimation {
-                        self.overlayView.removeFromSuperview()
-                    }
-                    animationGroup.leave()
+                           usingSpringWithDamping: 0.6,
+                           initialSpringVelocity: 0.8,
+                           options: [], animations: { () -> Void in
+                            self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(0), 0.0, 0.0, 1.0)
+                            self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(0))
+                            self.overlayView.alpha = 0
+            }, completion: {(f) -> Void in
+                if self.overlayViewDidCompleteOpenAnimation {
+                    self.overlayView.removeFromSuperview()
+                }
+                animationGroup.leave()
             })
             
-
+            
             switch openAnimationType {
             case .pop:
                 popAnimationWithClose(group: animationGroup)
@@ -358,17 +358,17 @@ open class Floaty: UIView {
                 noneAnimationWithClose()
             }
         }
-
+        
         animationGroup.notify(queue: .main) {
             self.fabDelegate?.floatyDidClose?(self)
         }
         fabDelegate?.floatyClosed?(self)
         closed = true
     }
-
+    
     /**
-        Items open or close.
-    */
+     Items open or close.
+     */
     open func toggle() {
         if items.count > 0 {
             if closed == true {
@@ -380,16 +380,16 @@ open class Floaty: UIView {
             fabDelegate?.emptyFloatySelected?(self)
         }
     }
-
+    
     /**
-        Add custom item
-    */
+     Add custom item
+     */
     open func addItem(item: FloatyItem) {
         let big = size > item.size ? size : item.size
         let small = size <= item.size ? size : item.size
         item.frame.origin = CGPoint(x: big/2-small/2, y: big/2-small/2)
         item.alpha = 0
-		item.actionButton = self
+        item.actionButton = self
         items.append(item)
         addSubview(item)
     }
@@ -412,10 +412,10 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Add item with title.
-    */
+     Add item with title.
+     */
     @discardableResult
     open func addItem(title: String) -> FloatyItem {
         let item = FloatyItem()
@@ -443,10 +443,10 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Add item with title and icon.
-    */
+     Add item with title and icon.
+     */
     @discardableResult
     open func addItem(_ title: String, icon: UIImage?) -> FloatyItem {
         let item = FloatyItem()
@@ -456,7 +456,7 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
      Add item with title and handler.
      */
@@ -488,10 +488,10 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Add item with title, icon or handler.
-    */
+     Add item with title, icon or handler.
+     */
     @discardableResult
     open func addItem(_ title: String, icon: UIImage?, handler: @escaping ((FloatyItem) -> Void)) -> FloatyItem {
         let item = FloatyItem()
@@ -517,15 +517,15 @@ open class Floaty: UIView {
             item.titleLabelPosition = titlePosition!
         }
         item.title = title
-        item.icon = icon        
+        item.icon = icon
         item.handler = handler
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Add item with icon.
-    */
+     Add item with icon.
+     */
     @discardableResult
     open func addItem(icon: UIImage?) -> FloatyItem {
         let item = FloatyItem()
@@ -534,10 +534,10 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Add item with icon and handler.
-    */
+     Add item with icon and handler.
+     */
     @discardableResult
     open func addItem(icon: UIImage?, handler: @escaping ((FloatyItem) -> Void)) -> FloatyItem {
         let item = FloatyItem()
@@ -547,30 +547,30 @@ open class Floaty: UIView {
         addItem(item: item)
         return item
     }
-
+    
     /**
-        Remove item.
-    */
+     Remove item.
+     */
     open func removeItem(item: FloatyItem) {
         guard let index = items.index(of: item) else { return }
         items[index].removeFromSuperview()
         items.remove(at: index)
     }
-
+    
     /**
-        Remove item with index.
-    */
+     Remove item with index.
+     */
     open func removeItem(index: Int) {
         items[index].removeFromSuperview()
         items.remove(at: index)
     }
-
+    
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if closed == false {
             for item in items {
                 if item.isHidden == true { continue }
                 var itemPoint = item.convert(point, from: self)
-
+                
                 let tapArea = determineTapArea(item: item)
                 if tapArea.contains(itemPoint) == true {
                     itemPoint = item.bounds.origin
@@ -578,10 +578,10 @@ open class Floaty: UIView {
                 }
             }
         }
-
+        
         return super.hitTest(point, with: event)
     }
-
+    
     fileprivate func determineTapArea(item : FloatyItem) -> CGRect {
         let tappableMargin : CGFloat = 30.0
         var x : CGFloat?
@@ -599,10 +599,10 @@ open class Floaty: UIView {
             width = item.titleLabel.bounds.size.width + item.bounds.size.width + tappableMargin
         }
         let height = item.bounds.size.height
-
+        
         return CGRect(x: x!, y: y, width: width, height: height)
     }
-
+    
     fileprivate func setCircleLayer() {
         circleLayer.removeFromSuperlayer()
         circleLayer.frame = CGRect(x: 0, y: 0, width: size, height: size)
@@ -610,7 +610,7 @@ open class Floaty: UIView {
         circleLayer.cornerRadius = size/2
         layer.addSublayer(circleLayer)
     }
-
+    
     fileprivate func setPlusLayer() {
         plusLayer.removeFromSuperlayer()
         plusLayer.frame = CGRect(x: 0, y: 0, width: size, height: size)
@@ -620,45 +620,45 @@ open class Floaty: UIView {
         plusLayer.path = plusBezierPath().cgPath
         layer.addSublayer(plusLayer)
     }
-
+    
     fileprivate func setButtonImage() {
         buttonImageView.removeFromSuperview()
         buttonImageView = UIImageView(image: buttonImage)
-		buttonImageView.tintColor = plusColor
+        buttonImageView.tintColor = plusColor
         buttonImageView.frame = CGRect(
             x: circleLayer.frame.origin.x + (size / 2 - buttonImageView.frame.size.width / 2),
             y: circleLayer.frame.origin.y + (size / 2 - buttonImageView.frame.size.height / 2),
             width: buttonImageView.frame.size.width,
             height: buttonImageView.frame.size.height
         )
-
+        
         addSubview(buttonImageView)
     }
-
+    
     fileprivate func setTintLayer() {
         tintLayer.frame = CGRect(x: circleLayer.frame.origin.x, y: circleLayer.frame.origin.y, width: size, height: size)
         tintLayer.backgroundColor = UIColor.white.withAlphaComponent(0.2).cgColor
         tintLayer.cornerRadius = size/2
         layer.addSublayer(tintLayer)
     }
-
+    
     fileprivate func setOverlayView() {
-		setOverlayFrame()
+        setOverlayFrame()
         overlayView.backgroundColor = overlayColor
         overlayView.alpha = 0
         overlayView.isUserInteractionEnabled = true
-
+        
     }
-	fileprivate func setOverlayFrame() {
+    fileprivate func setOverlayFrame() {
         if let superview = superview {
-		    overlayView.frame = CGRect(
-			  x: 0,y: 0,
-			  width: superview.bounds.width,
-			  height: superview.bounds.height
-		    )
+            overlayView.frame = CGRect(
+                x: 0,y: 0,
+                width: superview.bounds.width,
+                height: superview.bounds.height
+            )
         }
-	}
-
+    }
+    
     fileprivate func setShadow() {
         if !hasShadow {
             return
@@ -669,7 +669,7 @@ open class Floaty: UIView {
         circleLayer.shadowColor = UIColor.black.cgColor
         circleLayer.shadowOpacity = 0.4
     }
-
+    
     fileprivate func plusBezierPath() -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: CGPoint(x: size/2, y: size/3))
@@ -678,21 +678,21 @@ open class Floaty: UIView {
         path.addLine(to: CGPoint(x: size-size/3, y: size/2))
         return path
     }
-
+    
     fileprivate func itemDefaultSet(_ item: FloatyItem) {
         item.buttonColor = itemButtonColor
-
-		/// Use separate color (if specified) for item button image, or default to the plusColor
-		item.iconImageView.tintColor = itemImageColor ?? plusColor
+        
+        /// Use separate color (if specified) for item button image, or default to the plusColor
+        item.iconImageView.tintColor = itemImageColor ?? plusColor
         item.titleColor = itemTitleColor
         item.circleShadowColor = itemShadowColor
         item.titleShadowColor = itemShadowColor
         item.size = itemSize
     }
-
+    
     
     fileprivate func setBottomFrameAccordingToRTL(_ keyboardSize: CGFloat = 0) {
-    
+        
         if FloatyManager.defaultInstance().rtlMode {
             setLeftBottomFrame(keyboardSize)
             self.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
@@ -724,7 +724,7 @@ open class Floaty: UIView {
             frame.size.height += paddingY
         }
     }
-
+    
     
     fileprivate func setRightBottomFrame(_ keyboardSize: CGFloat = 0) {
         if superview == nil {
@@ -742,13 +742,13 @@ open class Floaty: UIView {
                 height: size
             )
         }
-
+        
         if friendlyTap == true {
             frame.size.width += paddingX
             frame.size.height += paddingY
         }
     }
-
+    
     fileprivate func recalculateItemsOrigin() {
         for item in items {
             let big = size > item.size ? size : item.size
@@ -756,26 +756,26 @@ open class Floaty: UIView {
             item.frame.origin = CGPoint(x: big/2-small/2, y: big/2-small/2)
         }
     }
-
+    
     fileprivate func setObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-
+    
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         if isTouched(touches) {
             setTintLayer()
         }
     }
-
+    
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         tintLayer.removeFromSuperlayer()
@@ -783,11 +783,11 @@ open class Floaty: UIView {
             toggle()
         }
     }
-
+    
     fileprivate func isTouched(_ touches: Set<UITouch>) -> Bool {
         return touches.count == 1 && touches.first?.tapCount == 1 && touches.first?.location(in: self) != nil
     }
-
+    
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (object as? UIView) == superview && (keyPath == "frame" || keyPath == "bounds") {
             if isCustomFrame == false {
@@ -802,7 +802,7 @@ open class Floaty: UIView {
             frame.origin.y = ((self.superview!.bounds.size.height - size) - paddingY) + scrollView.contentOffset.y
         }
     }
-
+    
     open override func willMove(toSuperview newSuperview: UIView?) {
         superview?.removeObserver(self, forKeyPath: "frame")
         superview?.removeObserver(self, forKeyPath: "bounds")
@@ -817,7 +817,7 @@ open class Floaty: UIView {
         }
         super.willMove(toSuperview: newSuperview)
     }
-
+    
     open override func didMoveToSuperview() {
         super.didMoveToSuperview()
         superview?.addObserver(self, forKeyPath: "frame", options: [], context: nil)
@@ -832,22 +832,22 @@ open class Floaty: UIView {
             }
         }
     }
-
+    
     @objc internal func deviceOrientationDidChange(_ notification: Notification) {
         guard let keyboardSize: CGFloat = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size.height else {
             return
         }
-
-		/// Update overlay frame for new orientation dimensions
-		setOverlayFrame()
-
+        
+        /// Update overlay frame for new orientation dimensions
+        setOverlayFrame()
+        
         if isCustomFrame == false {
             setBottomFrameAccordingToRTL(keyboardSize)
         } else {
             size = min(frame.size.width, frame.size.height)
         }
     }
-
+    
     @objc internal func keyboardWillShow(_ notification: Notification) {
         guard let keyboardSize: CGFloat = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size.height,
             respondsToKeyboard, !sticky else {
@@ -869,7 +869,7 @@ open class Floaty: UIView {
             )
         }, completion: nil)
     }
-
+    
     @objc internal func keyboardWillHide(_ notification: Notification) {
         guard respondsToKeyboard, !sticky else {
             return
@@ -887,11 +887,11 @@ open class Floaty: UIView {
 }
 
 /**
-    Opening animation functions
+ Opening animation functions
  */
 extension Floaty {
     /**
-        Pop animation
+     Pop animation
      */
     fileprivate func popAnimationWithOpen(group: DispatchGroup) {
         var itemHeight: CGFloat = 0
@@ -907,19 +907,19 @@ extension Floaty {
             item.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
             group.enter()
             UIView.animate(withDuration: 0.3, delay: delay,
-                                       usingSpringWithDamping: 0.55,
-                                       initialSpringVelocity: 0.3,
-                                       options: UIViewAnimationOptions(), animations: { () -> Void in
-                                        item.layer.transform = CATransform3DIdentity
-                                        item.alpha = 1
+                           usingSpringWithDamping: 0.55,
+                           initialSpringVelocity: 0.3,
+                           options: UIViewAnimationOptions(), animations: { () -> Void in
+                            item.layer.transform = CATransform3DIdentity
+                            item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
-
+            
             delay += animationSpeed
         }
     }
-
+    
     fileprivate func popAnimationWithClose(group: DispatchGroup) {
         var delay = 0.0
         for item in items.reversed() {
@@ -934,9 +934,9 @@ extension Floaty {
             delay += animationSpeed
         }
     }
-
+    
     /**
-        Fade animation
+     Fade animation
      */
     fileprivate func fadeAnimationWithOpen(group: DispatchGroup) {
         var itemHeight: CGFloat = 0
@@ -947,37 +947,37 @@ extension Floaty {
             item.frame.origin.y = -itemHeight
             group.enter()
             UIView.animate(withDuration: 0.4,
-                                       delay: delay,
-                                       options: [],
-                                       animations: { () -> Void in
-                                        item.alpha = 1
+                           delay: delay,
+                           options: [],
+                           animations: { () -> Void in
+                            item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
-
+            
             delay += animationSpeed * 2
         }
     }
-
+    
     fileprivate func fadeAnimationWithClose(group: DispatchGroup) {
         var delay = 0.0
         for item in items.reversed() {
             if item.isHidden == true { continue }
             group.enter()
             UIView.animate(withDuration: 0.4,
-                                       delay: delay,
-                                       options: [],
-                                       animations: { () -> Void in
-                                        item.alpha = 0
+                           delay: delay,
+                           options: [],
+                           animations: { () -> Void in
+                            item.alpha = 0
             }, completion: { _ in
                 group.leave()
             })
             delay += animationSpeed * 2
         }
     }
-
+    
     /**
-        Slide left animation
+     Slide left animation
      */
     fileprivate func slideLeftAnimationWithOpen(group: DispatchGroup) {
         var itemHeight: CGFloat = 0
@@ -989,19 +989,19 @@ extension Floaty {
             item.frame.origin.y = -itemHeight
             group.enter()
             UIView.animate(withDuration: 0.3, delay: delay,
-                                       usingSpringWithDamping: 0.55,
-                                       initialSpringVelocity: 0.3,
-                                       options: UIViewAnimationOptions(), animations: { () -> Void in
-                                        item.frame.origin.x = self.size/2 - self.itemSize/2
-                                        item.alpha = 1
+                           usingSpringWithDamping: 0.55,
+                           initialSpringVelocity: 0.3,
+                           options: UIViewAnimationOptions(), animations: { () -> Void in
+                            item.frame.origin.x = self.size/2 - self.itemSize/2
+                            item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
-
+            
             delay += animationSpeed
         }
     }
-
+    
     fileprivate func slideLeftAnimationWithClose(group: DispatchGroup) {
         var delay = 0.0
         for item in items.reversed() {
@@ -1016,9 +1016,9 @@ extension Floaty {
             delay += animationSpeed
         }
     }
-
+    
     /**
-        Slide up animation
+     Slide up animation
      */
     fileprivate func slideUpAnimationWithOpen(group: DispatchGroup) {
         var itemHeight: CGFloat = 0
@@ -1027,14 +1027,14 @@ extension Floaty {
             itemHeight += item.size + itemSpace
             group.enter()
             UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: { () -> Void in
-                                        item.frame.origin.y = -itemHeight
-                                        item.alpha = 1
+                item.frame.origin.y = -itemHeight
+                item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
         }
     }
-
+    
     fileprivate func slideUpAnimationWithClose(group: DispatchGroup) {
         for item in items.reversed() {
             if item.isHidden == true { continue }
@@ -1047,9 +1047,9 @@ extension Floaty {
             })
         }
     }
-
+    
     /**
-        Slide down animation
+     Slide down animation
      */
     fileprivate func slideDownAnimationWithOpen(group: DispatchGroup) {
         var itemHeight: CGFloat = 0
@@ -1058,14 +1058,14 @@ extension Floaty {
             itemHeight += item.size + itemSpace
             group.enter()
             UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: { () -> Void in
-                                        item.frame.origin.y = itemHeight
-                                        item.alpha = 1
+                item.frame.origin.y = itemHeight
+                item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
         }
     }
-
+    
     fileprivate func slideDownAnimationWithClose(group: DispatchGroup) {
         for item in items.reversed() {
             if item.isHidden == true { continue }
@@ -1078,9 +1078,9 @@ extension Floaty {
             })
         }
     }
-
+    
     /**
-        None animation
+     None animation
      */
     fileprivate func noneAnimationWithOpen() {
         var itemHeight: CGFloat = 0
@@ -1091,7 +1091,7 @@ extension Floaty {
             item.alpha = 1
         }
     }
-
+    
     fileprivate func noneAnimationWithClose() {
         for item in items.reversed() {
             if item.isHidden == true { continue }
@@ -1102,7 +1102,7 @@ extension Floaty {
 }
 
 /**
-    Util functions
+ Util functions
  */
 extension Floaty {
     fileprivate func degreesToRadians(_ degrees: CGFloat) -> CGFloat {
@@ -1126,3 +1126,4 @@ extension UIView {
         return superviews
     }
 }
+
